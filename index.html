@@ -6,46 +6,50 @@
     <title>Tracker v.2</title>
     <link rel="manifest" href="manifest.json?v=2">
     <style>
-    /* Aseguramos que la app no ocupe más de lo que debe */
     body { 
         margin: 0; background: #000; color: white; font-family: sans-serif; 
-        height: 100vh; width: 100vw; display: flex; flex-direction: column; 
-        overflow: hidden; 
+        height: 100vh; display: flex; flex-direction: column;
+        /* Quitamos overflow hidden para ver si el navegador escala mejor */
     }
     
     #mesa { 
         display: grid; 
         grid-template-columns: 0.8fr 1fr 1fr 1fr; 
-        /* La clave aquí es que las celdas de números se ajusten automáticamente */
-        grid-template-rows: 40px repeat(12, 1fr) 40px; 
-        gap: 2px; padding: 2px; 
-        flex-grow: 1; min-height: 0;
+        /* Fijas las alturas: cero (50px), filas números (40px cada una), columnas (60px) */
+        grid-template-rows: 50px repeat(12, 40px) 60px; 
+        gap: 2px; padding: 5px; flex-grow: 0; margin: 0 auto;
+        width: 100%; max-width: 500px; /* Limitamos el ancho para que no se vea gigante en pantallas grandes */
     }
     
     .c { 
         display: flex; flex-direction: column; align-items: center; justify-content: center; 
         border: 1px solid #333; cursor: pointer; font-weight: bold;
-        font-size: 0.9em; /* Ajuste global de fuente */
+        font-size: 1.2em; /* Números más grandes y legibles */
     }
-    .zero { grid-column: span 4; background: #27ae60; font-size: 1.2em; }
     
-    #box-d0, #box-d1, #box-d2 { grid-column: 1; background: #0b4e1c; font-size: 0.8em; }
+    .zero { grid-column: span 4; background: #27ae60; padding: 5px; }
     
-    .num-cell { grid-column: span 1; font-size: 1.1em; }
+    /* Decenas */
+    #box-d0, #box-d1, #box-d2 { grid-column: 1; background: #0b4e1c; font-size: 1em; }
     
-    #box-c0, #box-c1, #box-c2 { background: #0b4e1c; font-size: 0.8em; }
+    .num-cell { grid-column: span 1; font-size: 1.2em; }
+    
+    /* Columnas inferiores */
+    #box-c0, #box-c1, #box-c2 { background: #0b4e1c; font-size: 1em; }
 
-    .count-big { font-size: 1.1em; color: #ffff00; }
-    .label-small { font-size: 0.6em; }
-    .active-red { border: 2px solid #ff0000 !important; background: #581515 !important; }
+    .count-big { font-size: 1.2em; color: #ffff00; }
+    .label-small { font-size: 0.7em; }
+    
+    .active-red { border: 3px solid #ff0000 !important; background: #581515 !important; }
     
     #stats { 
-        height: 40px; /* Barra inferior delgada */
-        background: #111; padding: 2px 5px; display: flex; 
+        height: 50px; 
+        background: #111; padding: 10px; display: flex; 
         justify-content: space-between; align-items: center; 
-        font-size: 0.85em; border-top: 1px solid #555; 
-        flex-shrink: 0; 
+        font-size: 1.1em; border-top: 2px solid #555; 
+        margin-top: 10px;
     }
+    </style>
            </style>
 </head>
 <body>
