@@ -3,85 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tracker v.2</title>
-    <link rel="manifest" href="manifest.json?v=2">
+    <title>Tracker</title>
     <style>
-    body { 
-        margin: 0; background: #000; color: white; font-family: sans-serif; 
-        height: 100vh; display: flex; flex-direction: column;
-        /* Quitamos overflow hidden para ver si el navegador escala mejor */
-    }
-    
-    #mesa { 
-        display: grid; 
-        grid-template-columns: 0.8fr 1fr 1fr 1fr; 
-        /* Fijas las alturas: cero (50px), filas números (40px cada una), columnas (60px) */
-        grid-template-rows: 50px repeat(12, 40px) 60px; 
-        gap: 2px; padding: 5px; flex-grow: 0; margin: 0 auto;
-        width: 100%; max-width: 500px; /* Limitamos el ancho para que no se vea gigante en pantallas grandes */
-    }
-    
-    .c { 
-        display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        border: 1px solid #333; cursor: pointer; font-weight: bold;
-        font-size: 1.2em; /* Números más grandes y legibles */
-    }
-    
-    .zero { grid-column: span 4; background: #27ae60; padding: 5px; }
-    
-    /* Decenas */
-    #box-d0, #box-d1, #box-d2 { grid-column: 1; background: #0b4e1c; font-size: 1em; }
-    
-    .num-cell { grid-column: span 1; font-size: 1.2em; }
-    
-    /* Columnas inferiores */
-    #box-c0, #box-c1, #box-c2 { background: #0b4e1c; font-size: 1em; }
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; background: #000; color: #fff; font-family: sans-serif; 
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden; 
+        }
+        
+        /* Contenedor principal que se centra y no se estira demasiado */
+        #mesa { 
+            display: grid; 
+            grid-template-columns: 0.8fr 1fr 1fr 1fr; 
+            grid-template-rows: 40px repeat(12, 1fr) 40px; 
+            gap: 2px; padding: 5px; flex: 1;
+            max-width: 600px; margin: 0 auto; width: 100%;
+        }
+        
+        .c { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            border: 1px solid #444; cursor: pointer; font-weight: bold; font-size: 0.9em;
+        }
+        
+        .zero { grid-column: span 4; background: #27ae60; }
+        #box-d0, #box-d1, #box-d2 { grid-column: 1; background: #0b4e1c; }
+        .num-cell { grid-column: span 1; font-size: 1.1em; }
+        #box-c0, #box-c1, #box-c2 { background: #0b4e1c; }
 
-    .count-big { font-size: 1.2em; color: #ffff00; }
-    .label-small { font-size: 0.7em; }
-    
-    .active-red { border: 3px solid #ff0000 !important; background: #581515 !important; }
-    
-    #stats { 
-        height: 50px; 
-        background: #111; padding: 10px; display: flex; 
-        justify-content: space-between; align-items: center; 
-        font-size: 1.1em; border-top: 2px solid #555; 
-        margin-top: 10px;
-    }
+        .count-big { font-size: 1em; color: #ffff00; }
+        .label-small { font-size: 0.5em; }
+        
+        #stats { 
+            height: 45px; background: #111; display: flex; 
+            justify-content: space-between; align-items: center; 
+            padding: 0 10px; font-size: 0.9em; border-top: 1px solid #555;
+            flex-shrink: 0;
+        }
     </style>
-           </style>
 </head>
 <body>
     <div id="mesa">
         <div class="c zero" onclick="reg(0)">0</div>
-        
-        <div class="c" id="box-d0"><div class="label-small">1ª</div><div class="count-big" id="cnt-d0">0</div><div class="lvl-badge" id="lvl-d0"></div></div>
-        <div class="c" id="box-d1"><div class="label-small">2ª</div><div class="count-big" id="cnt-d1">0</div><div class="lvl-badge" id="lvl-d1"></div></div>
-        <div class="c" id="box-d2"><div class="label-small">3ª</div><div class="count-big" id="cnt-d2">0</div><div class="lvl-badge" id="lvl-d2"></div></div>
-        
+        <div class="c" id="box-d0"><div class="label-small">1ª</div><div class="count-big" id="cnt-d0">0</div></div>
+        <div class="c" id="box-d1"><div class="label-small">2ª</div><div class="count-big" id="cnt-d1">0</div></div>
+        <div class="c" id="box-d2"><div class="label-small">3ª</div><div class="count-big" id="cnt-d2">0</div></div>
         <script>
             for(let i=1; i<=36; i++) {
                 let col = ([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(i)) ? '#b82e2e' : '#1a1a1a';
                 document.write(`<div class="c num-cell" style="background:${col}" onclick="reg(${i})">${i}</div>`);
             }
         </script>
-        
-        <div class="c" id="box-c0"><div class="label-small">C1</div><div class="count-big" id="cnt-c0">0</div><div class="lvl-badge" id="lvl-c0"></div></div>
-        <div class="c" id="box-c1"><div class="label-small">C2</div><div class="count-big" id="cnt-c1">0</div><div class="lvl-badge" id="lvl-c1"></div></div>
-        <div class="c" id="box-c2"><div class="label-small">C3</div><div class="count-big" id="cnt-c2">0</div><div class="lvl-badge" id="lvl-c2"></div></div>
+        <div class="c" id="box-c0"><div class="label-small">C1</div><div class="count-big" id="cnt-c0">0</div></div>
+        <div class="c" id="box-c1"><div class="label-small">C2</div><div class="count-big" id="cnt-c1">0</div></div>
+        <div class="c" id="box-c2"><div class="label-small">C3</div><div class="count-big" id="cnt-c2">0</div></div>
     </div>
-    
     <div id="stats">
-        <div>Rondas: <b id="rounds">0</b> | Skip: <b id="skip">0</b></div>
-        <div>Bal: <b id="balance">$0</b></div>
+        <div>R: <b id="rounds">0</b> | S: <b id="skip">0</b> | B: <b id="balance">$0</b></div>
         <button onclick="res()">Reset</button>
     </div>
-
     <script>
-        let rounds=0, skip=0, balance=0, betD=0, betC=0, activeD=[], activeC=[];
-        let dCounts=[0,0,0], cCounts=[0,0,0];
-        
+        let rounds=0, skip=0, balance=0, betD=0, betC=0, activeD=[], activeC=[], dCounts=[0,0,0], cCounts=[0,0,0];
         function reg(n) {
             if(n===0) return; rounds++;
             let hitD = Math.floor((n-1)/12), hitC = (n-1)%3;
@@ -102,19 +83,9 @@
             document.getElementById('rounds').innerText = rounds; document.getElementById('skip').innerText = skip; document.getElementById('balance').innerText = '$' + balance;
             for(let i=0; i<3; i++) {
                 document.getElementById(`cnt-d${i}`).innerText = dCounts[i]; document.getElementById(`cnt-c${i}`).innerText = cCounts[i];
-                let dBox = document.getElementById(`box-d${i}`), cBox = document.getElementById(`box-c${i}`);
-                dBox.className = activeD.includes(i) ? "c active-red" : "c"; cBox.className = activeC.includes(i) ? "c active-red" : "c";
-                if(activeD.includes(i) && betD>=2700) dBox.classList.add("alert-lvl4");
-                if(activeC.includes(i) && betC>=2700) cBox.classList.add("alert-lvl4");
-                document.getElementById(`lvl-d${i}`).innerText = activeD.includes(i) ? "$"+betD : "";
-                document.getElementById(`lvl-c${i}`).innerText = activeC.includes(i) ? "$"+betC : "";
             }
         }
         function res() { location.reload(); }
-        <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js?v=2');
-    }
-</script>
+    </script>
 </body>
 </html>
